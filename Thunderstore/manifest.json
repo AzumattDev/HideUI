@@ -1,0 +1,9 @@
+{
+  "name": "HideUI",
+  "version_number": "1.0.0",
+  "website_url": "https://discord.gg/Vd89cSgxNW",
+  "description": "Adds a hotkey to hide the UI (configurable). When toggled, it changes the setting in the config file, so it will remain toggled off, until turned back on again.",
+  "dependencies": [
+    "SunkenlandModding-BepInExPack_Sunkenland-5.4.22"
+  ]
+}
