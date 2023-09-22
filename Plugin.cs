@@ -15,7 +15,7 @@ namespace HideUI
     public class HideUIPlugin : BaseUnityPlugin
     {
         internal const string ModName = "HideUI";
-        internal const string ModVersion = "1.0.0";
+        internal const string ModVersion = "1.0.1";
         internal const string Author = "Azumatt";
         private const string ModGUID = Author + "." + ModName;
         private static string ConfigFileName = ModGUID + ".cfg";
@@ -32,7 +32,7 @@ namespace HideUI
 
         public void Awake()
         {
-            hideUiHotkey = Config.Bind("1 - General", "Hide UI Hotkey", new KeyboardShortcut(KeyCode.H, KeyCode.LeftControl), new ConfigDescription("Hotkey to toggle on and off the UI.", null, new AcceptableShortcuts()));
+            hideUiHotkey = Config.Bind("1 - General", "Hide UI Hotkey", new KeyboardShortcut(KeyCode.H), new ConfigDescription("Hotkey to toggle on and off the UI.", null, new AcceptableShortcuts()));
             shouldHideUI = Config.Bind("1 - General", "Hide UI", Toggle.Off, "If on, the UI will be hidden. If off, the UI will be shown. The hotkey automatically toggles this value.");
 
             Assembly assembly = Assembly.GetExecutingAssembly();
@@ -43,22 +43,21 @@ namespace HideUI
         private void Update()
         {
             if (!Global.code || Global.code.uiGameMenu == null || Global.code.uiCombat == null) return;
+
+            ApplyUIState();
             if (hideUiHotkey.Value.IsKeyDown())
             {
                 shouldHideUI.Value = shouldHideUI.Value == Toggle.On ? Toggle.Off : Toggle.On;
             }
-
-            if (shouldHideUI.Value == Toggle.On && !Global.code.uiGameMenu.hideUI)
-            {
-                HideUI();
-            }
         }
 
-        public void HideUI()
+        public void ApplyUIState()
         {
-            Global.code.uiCombat.gameObject.SetActive(Global.code.uiGameMenu.hideUI);
-            Global.code.uiGameMenu.hideUI = !Global.code.uiGameMenu.hideUI;
+            bool uiStatus = shouldHideUI.Value == Toggle.On;
+            Global.code.uiCombat.gameObject.SetActive(!uiStatus);
+            Global.code.uiGameMenu.hideUI = uiStatus;
         }
+
 
         private void OnDestroy()
         {
